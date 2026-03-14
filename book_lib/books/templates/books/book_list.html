@@ -1,0 +1,57 @@
+<h1>Library Books</h1>
+
+<p>Welcome {{ user.username }}</p>
+
+<form method="get">
+    <input type="text" name="search" placeholder="Search by title or genre">
+    <button type="submit">Search</button>
+</form>
+
+{% if perms.books.add_book %}
+<a href="{% url 'book-add' %}">Add Book</a>
+{% endif %}
+
+{% if perms.books.add_book %}
+<a href="{% url 'scrape-books' %}">Scrape Books</a>
+{% endif %}
+
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Price</th>
+        <th>Description</th>
+
+        {% if perms.books.change_book or perms.books.delete_book %}
+        <th>Actions</th>
+        {% endif %}
+    </tr>
+
+    {% for book in books %}
+    <tr>
+        <td>{{ book.title }}</td>
+        <td>{{ book.genre }}</td>
+        <td>{{ book.price }}</td>
+        <td>{{ book.description }}</td>
+
+        {% if perms.books.change_book or perms.books.delete_book %}
+        <td>
+            {% if perms.books.change_book %}
+            <a href="{% url 'book-edit' book.id %}">Edit</a>
+            {% endif %}
+
+            {% if perms.books.delete_book %}
+            <a href="{% url 'book-delete' book.id %}">Delete</a>
+            {% endif %}
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+
+<form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
