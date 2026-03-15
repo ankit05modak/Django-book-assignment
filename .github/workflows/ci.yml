@@ -34,7 +34,6 @@ jobs:
 
       - name: Run tests
         working-directory: book_lib
-        continue-on-error: true
         run: |
           mkdir -p results
           uv run pytest -n auto --junitxml=results/junit.xml --cov=books --cov-report=xml:results/coverage.xml --cov-report=html:results/coverage_html || true
