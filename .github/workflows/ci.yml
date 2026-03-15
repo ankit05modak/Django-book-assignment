@@ -4,6 +4,11 @@ on:
   pull_request:
     branches: ["master"]
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -27,38 +32,35 @@ jobs:
         run: |
           uv sync
 
-      - name: Run tests via `uv run poe tests` (produce JUnit & coverage)
-        continue-on-error: true
+      - name: Run tests
+        working-directory: book_lib
         run: |
           mkdir -p results
-          uv run pytest -n auto tests --junitxml=results/junit.xml --cov=books --cov-report=xml:results/coverage.xml --cov-report=html:results/coverage_html || true
+          uv run pytest -n auto --junitxml=results/junit.xml --cov=books --cov-report=xml:results/coverage.xml --cov-report=html:results/coverage_html || true
 
       - name: Upload JUnit XML
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: junit-xml
-          path: results/junit.xml
+          path: book_lib/results/junit.xml
 
       - name: Upload coverage xml
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-xml
-          path: results/coverage.xml
+          path: book_lib/results/coverage.xml
 
       - name: Upload coverage HTML
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-html
-          path: results/coverage_html
+          path: book_lib/results/coverage_html
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: (!cancelled())
+        if: ${{ !cancelled() }}
         with:
-            files: |
-                results/*.xml
-                results/*.trx
-                results/*.json
+          files: book_lib/results/junit.xml
