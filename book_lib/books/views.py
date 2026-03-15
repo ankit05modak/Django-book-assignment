@@ -87,3 +87,10 @@ class ScrapeBooksView(LoginRequiredMixin, PermissionRequiredMixin, View):
         # For now just show a success message
         messages.success(request, f"Scraping triggered for category: {category}")
         return redirect("scrape-books")
+
+        """docker exec -t library-postgres-1 pg_dump \
+-U postgres \
+--data-only \
+--column-inserts \
+library_db > db_dump.sql
+        """
