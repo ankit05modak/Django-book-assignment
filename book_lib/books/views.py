@@ -14,6 +14,8 @@ from django.views.generic import (
     View,
 )
 
+from .services import scrape_book
+
 from .forms import BookForm
 from .models import Book
 from .constants import BOOK_CATEGORIES
@@ -78,6 +80,9 @@ class ScrapeBooksView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if not category:
             messages.error(request, "Please select a category")
             return redirect("scrape-books")
+
+        # Trigger scraper
+        scrape_book(category=category)
 
         # For now just show a success message
         messages.success(request, f"Scraping triggered for category: {category}")

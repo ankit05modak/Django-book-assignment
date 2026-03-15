@@ -50,3 +50,6 @@ BOOK_CATEGORIES = [
     "Erotica",
     "Crime",
 ]
+
+
+BOOK_WEBSITE_URL = "https://books.toscrape.com/"
