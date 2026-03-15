@@ -54,6 +54,9 @@ def scrape_book(category: str):
             book_genre=book_genre,
         )
 
+    # Close the driver
+    driver.close()
+
 
 def get_category_url(driver: WebDriver, category_name: str):
     soup = BeautifulSoup(driver.page_source, "html.parser")
