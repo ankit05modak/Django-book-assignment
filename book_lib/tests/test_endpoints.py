@@ -1,7 +1,6 @@
 import pytest
 
 from books.models import Book
-import books.services as services
 
 
 @pytest.fixture
