@@ -54,12 +54,11 @@ jobs:
           name: coverage-html
           path: results/coverage_html
 
-      - name: Report test results to PR
-        if: always()
-        uses: dorny/test-reporter@v1
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: (!cancelled())
         with:
-          name: pytest
-          path: results/junit.xml
-          reporter: junit
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            files: |
+                test-results/**/*.xml
+                test-results/**/*.trx
+                test-results/**/*.json
