@@ -32,7 +32,7 @@ docker-compose up -d
 uv run python manage.py migrate
 ```
 
-4. Load the seed data (has admins, users and permissions given at superuser and database level)
+4. [Optional] Load the seed data (has admins, users and permissions given at superuser and database level)
 ```bash
 docker exec -t library-postgres-1 pg_dump \
 -U postgres \
@@ -67,5 +67,25 @@ Common CI troubleshooting:
 
 ## Development notes
 
-- Tests are configured via `pytest.ini`. Django settings for tests are in `book_lib/tests/test_settings.py` (importing `book_lib.config.settings`).
-- If you see import errors like `No module named 'book_lib'` or `No module named 'config'`, confirm the Python path includes the project root (CI uses `PYTHONPATH=.`, local runs may require adjusting `sys.path` or using the recommended `uv` tasks).
+- If you see import errors like `No module named 'book_lib'` or `No module named 'config'`, confirm running tests from `book_lib`
+- `db_dump.sql` includes the permission sets given through super user. The idea is to make things simple for you to review. You can directly load the dump data to postgres running inside docker container.
+
+    - Users:
+
+            Superuser:
+                name: admin
+                pass: admin
+
+            Admin:
+                name: AdminAnkit
+                pass: demo@123
+
+            User:
+                name: UserAnkit
+                pass: demo@123
+
+        Otherwise, you would have to create users and groups by yourself & assign permissions.
+
+- For dropdown, I have hardcoded the data as of now.
+- For each category, I am scraping all the webpages.
+- Tests run on each pull-request and generates a report.
