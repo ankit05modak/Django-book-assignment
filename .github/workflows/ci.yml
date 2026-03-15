@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies and tools (use `uv sync`)
+        run: |
+          uv sync
+
+      - name: Run tests via `uv run poe tests` (produce JUnit & coverage)
+        continue-on-error: true
+        run: |
+          mkdir -p results
+          uv run pytest -n auto tests --junitxml=results/junit.xml --cov=books --cov-report=xml:results/coverage.xml --cov-report=html:results/coverage_html || true
+
+      - name: Upload JUnit XML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-xml
+          path: results/junit.xml
+
+      - name: Upload coverage xml
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: results/coverage.xml
+
+      - name: Upload coverage HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: results/coverage_html
+
+      - name: Report test results to PR
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: pytest
+          path: results/junit.xml
+          reporter: junit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
