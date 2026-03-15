@@ -1,57 +1,85 @@
-<h1>Library Books</h1>
+{% extends "base.html" %}
 
-<p>Welcome {{ user.username }}</p>
+{% block content %}
 
-<form method="get">
-    <input type="text" name="search" placeholder="Search by title or genre">
-    <button type="submit">Search</button>
-</form>
+<h2>Library Books</h2>
 
-{% if perms.books.add_book %}
-<a href="{% url 'book-add' %}">Add Book</a>
-{% endif %}
+<p class="text-muted">Welcome {{ user.username }}</p>
 
-{% if perms.books.add_book %}
-<a href="{% url 'scrape-books' %}">Scrape Books</a>
-{% endif %}
+<div class="d-flex justify-content-between mb-3">
 
-<table border="1">
-    <tr>
-        <th>Title</th>
-        <th>Genre</th>
-        <th>Price</th>
-        <th>Description</th>
+    <form method="get" class="d-flex">
+        <input class="form-control me-2" type="text" name="search"
+            placeholder="Search by title or genre">
+        <button class="btn btn-outline-primary">Search</button>
+    </form>
 
-        {% if perms.books.change_book or perms.books.delete_book %}
-        <th>Actions</th>
+    <div>
+
+        {% if perms.books.add_book %}
+        <a class="btn btn-success" href="{% url 'book-add' %}">Add Book</a>
         {% endif %}
-    </tr>
 
-    {% for book in books %}
-    <tr>
-        <td>{{ book.title }}</td>
-        <td>{{ book.genre }}</td>
-        <td>{{ book.price }}</td>
-        <td>{{ book.description }}</td>
+        {% if perms.books.add_book %}
+        <a class="btn btn-warning" href="{% url 'scrape-books' %}">Scrape
+            Books</a>
+        {% endif %}
 
-        {% if perms.books.change_book or perms.books.delete_book %}
-        <td>
-            {% if perms.books.change_book %}
-            <a href="{% url 'book-edit' book.id %}">Edit</a>
+    </div>
+
+</div>
+
+<table class="table table-bordered table-striped shadow">
+
+    <thead class="table-dark">
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Price</th>
+            <th>Description</th>
+
+            {% if perms.books.change_book or perms.books.delete_book %}
+            <th>Actions</th>
+            {% endif %}
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for book in books %}
+
+        <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.genre }}</td>
+            <td>£{{ book.price }}</td>
+            <td>{{ book.description|truncatechars:120 }}</td>
+
+            {% if perms.books.change_book or perms.books.delete_book %}
+            <td>
+
+                {% if perms.books.change_book %}
+                <a class="btn btn-sm btn-primary"
+                    href="{% url 'book-edit' book.id %}">Edit</a>
+                {% endif %}
+
+                {% if perms.books.delete_book %}
+                <a class="btn btn-sm btn-danger"
+                    href="{% url 'book-delete' book.id %}">Delete</a>
+                {% endif %}
+
+            </td>
             {% endif %}
 
-            {% if perms.books.delete_book %}
-            <a href="{% url 'book-delete' book.id %}">Delete</a>
-            {% endif %}
-        </td>
-        {% endif %}
-    </tr>
-    {% endfor %}
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
 </table>
-
-<br>
 
 <form method="post" action="{% url 'logout' %}">
     {% csrf_token %}
-    <button type="submit">Logout</button>
+    <button class="btn btn-secondary">Logout</button>
 </form>
+
+{% endblock %}

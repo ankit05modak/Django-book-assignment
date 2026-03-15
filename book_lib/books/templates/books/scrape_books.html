@@ -1,27 +1,47 @@
-<h1>Scrape Books</h1>
+{% extends "base.html" %}
 
-{% if messages %}
-<ul>
-    {% for msg in messages %}
-    <li>{{ msg }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+{% block content %}
 
-<form method="post">
-    {% csrf_token %}
+<div class="row justify-content-center">
 
-    <label>Select Category:</label>
-    <select name="category">
-        <option value>-- Select --</option>
-        {% for cat in categories %}
-        <option value="{{ cat }}">{{ cat }}</option>
-        {% endfor %}
-    </select>
+    <div class="col-md-6">
 
-    <br><br>
-    <button type="submit">Scrape</button>
-</form>
+        <div class="card shadow p-4">
 
-<br>
-<a href="{% url 'book-list' %}">Back to Books</a>
+            <h3 class="mb-3 text-center">Scrape Books</h3>
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                <label class="form-label">Select Category</label>
+
+                <select class="form-select" name="category">
+
+                    <option value>-- Select Category --</option>
+
+                    {% for cat in categories %}
+                    <option value="{{ cat }}">{{ cat }}</option>
+                    {% endfor %}
+
+                </select>
+
+                <br>
+
+                <button class="btn btn-primary w-100">Start Scraping</button>
+
+            </form>
+
+            <br>
+
+            <a class="btn btn-secondary w-100" href="{% url 'book-list' %}">
+                Back to Books
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

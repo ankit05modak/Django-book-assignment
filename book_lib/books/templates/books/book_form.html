@@ -1,13 +1,33 @@
-<h2>Book Form</h2>
+{% extends "base.html" %}
 
-<form method="post">
-    {% csrf_token %}
+{% block content %}
 
-    {{ form.as_p }}
+<div class="row justify-content-center">
 
-    <button type="submit">Save</button>
-</form>
+    <div class="col-md-6">
 
-<br>
+        <div class="card shadow p-4">
 
-<a href="{% url 'book-list' %}">Back to Book List</a>
+            <h3 class="mb-3">Book Form</h3>
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button class="btn btn-success">Save</button>
+
+            </form>
+
+            <br>
+
+            <a class="btn btn-secondary" href="{% url 'book-list' %}">Back</a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

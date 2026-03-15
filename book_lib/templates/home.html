@@ -1,6 +1,24 @@
-<h1>Library Management System</h1>
+{% extends "base.html" %}
 
-<form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-</form>
+{% block content %}
+
+<div class="text-center">
+
+    <h2>Library Management Dashboard</h2>
+
+    <br>
+
+    <a class="btn btn-primary" href="{% url 'book-list' %}">
+        Go to Books
+    </a>
+
+    <br><br>
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="btn btn-secondary">Logout</button>
+    </form>
+
+</div>
+
+{% endblock %}
