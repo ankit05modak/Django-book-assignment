@@ -23,7 +23,7 @@ uv sync                    # if you use uv; alternatively: pip install -r requir
 
 2. Spin up the docker-compose
 ```bash
-docker-compuse up -d
+docker-compose up -d
 ```
 
 3. Run migrations (if using DB-backed tests) or rely on in-memory tests configured for CI:
@@ -33,6 +33,13 @@ uv run python manage.py migrate
 ```
 
 4. Load the seed data (has admins, users and permissions given at superuser and database level)
+```bash
+docker exec -t library-postgres-1 pg_dump \
+-U postgres \
+--data-only \
+--column-inserts \
+library_db > db_dump.sql
+```
 
 ## Running tests
 
