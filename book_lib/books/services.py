@@ -92,17 +92,31 @@ def open_webpage(url: str, driver: WebDriver) -> WebDriver:
 
 
 def get_book_urls(driver: WebDriver, category_url: str) -> list:
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-
-    # Get all books urls
-    books = soup.select("article.product_pod")
-
     book_urls = []
 
-    for book in books:
-        link = book.select_one("h3 a")["href"]
-        full_url = urljoin(category_url, link)
-        book_urls.append(full_url)
+    while True:
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+
+        # Get all books urls
+        books = soup.select("article.product_pod")
+
+        for book in books:
+            link = book.select_one("h3 a")["href"]
+            full_url = urljoin(category_url, link)
+            book_urls.append(full_url)
+
+        # check for next page
+        next_button = soup.select_one("li.next a")
+
+        if next_button:
+            next_page = next_button["href"]
+
+            base_url = driver.current_url.rsplit("/", 1)[0]
+
+            driver.get(f"{base_url}/{next_page}")
+
+        else:
+            break
 
     return book_urls
 
