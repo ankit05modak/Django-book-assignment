@@ -21,11 +21,18 @@
 uv sync                    # if you use uv; alternatively: pip install -r requirements.txt
 ```
 
-2. Run migrations (if using DB-backed tests) or rely on in-memory tests configured for CI:
+2. Spin up the docker-compose
+```bash
+docker-compuse up -d
+```
+
+3. Run migrations (if using DB-backed tests) or rely on in-memory tests configured for CI:
 
 ```bash
 uv run python manage.py migrate
 ```
+
+4. Load the seed data (has admins, users and permissions given at superuser and database level)
 
 ## Running tests
 
